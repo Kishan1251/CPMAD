@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../models/note_model.dart';
 import '../controllers/notes_controller.dart';
 
-/// Screen for both Adding new note and Editing existing note (Udemy Section 16)
 class AddEditNoteScreen extends StatefulWidget {
   final Note? note;
 
@@ -14,9 +12,7 @@ class AddEditNoteScreen extends StatefulWidget {
 }
 
 class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
-  final _formKey = GlobalKey<FormState>();
   final NoteController _noteController = NoteController();
-
   late TextEditingController _titleController;
   late TextEditingController _contentController;
 
@@ -37,27 +33,26 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
   }
 
   void _saveNote() async {
-    if (_formKey.currentState!.validate()) {
-      final now = DateTime.now();
-      final formattedDate = DateFormat('dd/MM/yyyy hh:mm a').format(now);
+    final title = _titleController.text.trim();
+    final content = _contentController.text.trim();
 
+    if (title.isNotEmpty) {
       if (_isEditMode) {
         final updatedNote = Note(
           id: widget.note!.id,
-          title: _titleController.text.trim(),
-          content: _contentController.text.trim(),
-          date: formattedDate,
+          title: title,
+          content: content,
+          date: DateTime.now().toString(),
         );
         await _noteController.updateNote(updatedNote);
       } else {
         final newNote = Note(
-          title: _titleController.text.trim(),
-          content: _contentController.text.trim(),
-          date: formattedDate,
+          title: title,
+          content: content,
+          date: DateTime.now().toString(),
         );
         await _noteController.addNote(newNote);
       }
-
       if (mounted) {
         Navigator.pop(context, true);
       }
@@ -69,65 +64,26 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isEditMode ? 'Edit Note' : 'Add Note'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.check),
-            tooltip: 'Save Note',
-            onPressed: _saveNote,
-          ),
-        ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Title *',
-                  hintText: 'Enter note title',
-                  prefixIcon: Icon(Icons.title),
-                ),
-                validator: (val) {
-                  if (val == null || val.trim().isEmpty) {
-                    return 'Title cannot be empty';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: TextFormField(
-                  controller: _contentController,
-                  maxLines: null,
-                  expands: true,
-                  textAlignVertical: TextAlignVertical.top,
-                  decoration: const InputDecoration(
-                    labelText: 'Content *',
-                    hintText: 'Type your note content here...',
-                    alignLabelWithHint: true,
-                  ),
-                  validator: (val) {
-                    if (val == null || val.trim().isEmpty) {
-                      return 'Content cannot be empty';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: _saveNote,
-                  icon: const Icon(Icons.save),
-                  label: Text(_isEditMode ? 'Update Note' : 'Save Note'),
-                ),
-              ),
-            ],
-          ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(labelText: 'Title'),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _contentController,
+              decoration: const InputDecoration(labelText: 'Content'),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: _saveNote,
+              child: const Text('Save'),
+            ),
+          ],
         ),
       ),
     );

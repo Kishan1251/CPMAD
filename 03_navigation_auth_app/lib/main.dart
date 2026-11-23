@@ -1,40 +1,26 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const NamedRoutesApp());
+  runApp(const MyApp());
 }
 
-
-/// Udemy Course - Section 11: Using Named Routes in Flutter
-/// Demonstrates:
-/// - initialRoute definition
-/// - Centralized route dictionary: routes `Map<String, WidgetBuilder>`
-/// - Dynamic routing with onGenerateRoute & RouteSettings arguments
-/// - pushNamed and pushReplacementNamed navigation patterns
-class NamedRoutesApp extends StatelessWidget {
-  const NamedRoutesApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Named Routes Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-        useMaterial3: true,
-      ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const _NamedSplashScreen(),
-        '/login': (context) => const _NamedLoginScreen(),
-        '/register': (context) => const _NamedRegisterScreen(),
+        '/': (context) => const SplashScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/register': (context) => const RegisterScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/dashboard') {
-          final username = settings.arguments as String? ?? 'Guest User';
+          final username = settings.arguments as String? ?? 'User';
           return MaterialPageRoute(
-            builder: (context) => _NamedDashboardScreen(username: username),
+            builder: (context) => DashboardScreen(username: username),
           );
         }
         return null;
@@ -43,20 +29,19 @@ class NamedRoutesApp extends StatelessWidget {
   }
 }
 
-class _NamedSplashScreen extends StatefulWidget {
-  const _NamedSplashScreen();
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  State<_NamedSplashScreen> createState() => _NamedSplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _NamedSplashScreenState extends State<_NamedSplashScreen> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
-        // Navigation using pushReplacementNamed as taught in Section 11
         Navigator.pushReplacementNamed(context, '/login');
       }
     });
@@ -64,20 +49,25 @@ class _NamedSplashScreenState extends State<_NamedSplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.teal.shade700,
-      body: const Center(
+    return const Scaffold(
+      backgroundColor: Colors.blue,
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.route, size: 84, color: Colors.white),
-            SizedBox(height: 16),
-            Text(
-              'Named Routes Flow',
-              style: TextStyle(fontSize: 26, color: Colors.white, fontWeight: FontWeight.bold),
+            Icon(
+              Icons.flutter_dash,
+              size: 100,
+              color: Colors.white,
             ),
-            SizedBox(height: 8),
-            Text('Udemy Section 11', style: TextStyle(color: Colors.white70)),
+            SizedBox(height: 24),
+            Text(
+              'My App',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
           ],
         ),
       ),
@@ -85,30 +75,32 @@ class _NamedSplashScreenState extends State<_NamedSplashScreen> {
   }
 }
 
-class _NamedLoginScreen extends StatefulWidget {
-  const _NamedLoginScreen();
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<_NamedLoginScreen> createState() => _NamedLoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _NamedLoginScreenState extends State<_NamedLoginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
     _usernameController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  void _login() {
-    final user = _usernameController.text.trim();
-    if (user.isNotEmpty) {
-      // Pass argument using named route
-      Navigator.pushReplacementNamed(context, '/dashboard', arguments: user);
+  void _handleLogin() {
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+    if (username.isNotEmpty && password.isNotEmpty) {
+      Navigator.pushReplacementNamed(context, '/dashboard', arguments: username);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a username.')),
+        const SnackBar(content: Text('Please enter username and password')),
       );
     }
   }
@@ -116,30 +108,35 @@ class _NamedLoginScreenState extends State<_NamedLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login (Named Route)')),
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
               controller: _usernameController,
-              decoration: const InputDecoration(
-                labelText: 'Username',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.person),
-              ),
+              decoration: const InputDecoration(labelText: 'Email / Username'),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'Password'),
+            ),
+            const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: _login,
-              child: const Text('Login to Dashboard'),
+              onPressed: _handleLogin,
+              child: const Text('Login'),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/register'),
-              child: const Text('New User? Register with Named Route'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/register');
+              },
+              child: const Text('New user? Register here'),
             ),
           ],
         ),
@@ -148,68 +145,82 @@ class _NamedLoginScreenState extends State<_NamedLoginScreen> {
   }
 }
 
-class _NamedRegisterScreen extends StatelessWidget {
-  const _NamedRegisterScreen();
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register (Named Route)')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Registration Screen',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              const Text('Notice automatic back button in the AppBar!'),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Back to Login'),
-              ),
-            ],
-          ),
+      appBar: AppBar(
+        title: const Text('Register'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'Email Address'),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'Password'),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _confirmPasswordController,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'Confirm Password'),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Register'),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _NamedDashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatelessWidget {
   final String username;
 
-  const _NamedDashboardScreen({required this.username});
+  const DashboardScreen({super.key, required this.username});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard (Named Route)')),
+      appBar: AppBar(
+        title: const Text('Dashboard'),
+      ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.verified_user, size: 72, color: Colors.teal),
-              const SizedBox(height: 16),
-              Text(
-                'Welcome, $username!',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              const Text('Arguments successfully passed via onGenerateRoute!'),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
-                child: const Text('Logout'),
-              ),
-            ],
-          ),
+        child: Text(
+          'Hi $username',
+          style: const TextStyle(fontSize: 24),
         ),
       ),
     );

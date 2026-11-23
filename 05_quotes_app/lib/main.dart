@@ -3,15 +3,13 @@ import 'core/getx.dart';
 import 'controllers/quotes_controller.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: QuoteScreen(),
-  ));
+  runApp(
+    const MaterialApp(
+      home: QuoteScreen(),
+    ),
+  );
 }
 
-
-/// Quote Screen using Obx reactive builder and FloatingActionButton refresh (Section 17)
 class QuoteScreen extends StatelessWidget {
   const QuoteScreen({super.key});
 
@@ -21,72 +19,40 @@ class QuoteScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quotes App (GetX + REST API)'),
+        title: const Text('Quotes App'),
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(16.0),
           child: Obx(() {
-            if (controller.isLoading.value) {
-              return const Column(
+            if (controller.quotes.isNotEmpty) {
+              return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
-                  Text('Fetching inspiring quote...', style: TextStyle(color: Colors.grey)),
+                  Text(
+                    controller.quotes[0].q,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    controller.quotes[0].a,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               );
+            } else {
+              return const CircularProgressIndicator();
             }
-
-            if (controller.quotes.isEmpty) {
-              return const Text('No quotes loaded.');
-            }
-
-            final currentQuote = controller.quotes[0];
-
-            return Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              child: Padding(
-                padding: const EdgeInsets.all(28.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.format_quote, size: 54, color: Colors.indigoAccent),
-                    const SizedBox(height: 16),
-                    Text(
-                      currentQuote.quote,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        height: 1.4,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        '— ${currentQuote.author}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.indigo,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
           }),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: controller.fetchQuote,
-        icon: const Icon(Icons.refresh),
-        label: const Text('New Quote'),
+      floatingActionButton: FloatingActionButton(
+        onPressed: controller.fetchDetails,
+        child: const Icon(Icons.refresh),
       ),
     );
   }

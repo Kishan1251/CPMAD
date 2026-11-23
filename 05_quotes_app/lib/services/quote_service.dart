@@ -2,32 +2,27 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/quote_model.dart';
 
-/// QuoteService fetching remote quotes via HTTP (Section 17)
 class QuoteService {
-  static const String apiUrl = 'https://dummyjson.com/quotes/random';
+  static const String apiUrl = 'https://zenquotes.io/api/random';
 
   static final List<Quote> _fallbackQuotes = [
     Quote(
-      quote: 'When you have vision, it affects your attitude. Your attitude is optimistic rather than pessimistic.',
-      author: 'Zig Ziglar',
+      q: 'When you have vision, it affects your attitude. Your attitude is optimistic rather than pessimistic.',
+      a: 'Zig Ziglar',
     ),
     Quote(
-      quote: 'First, solve the problem. Then, write the code.',
-      author: 'John Johnson',
+      q: 'First, solve the problem. Then, write the code.',
+      a: 'John Johnson',
     ),
     Quote(
-      quote: 'Simplicity is the soul of efficiency.',
-      author: 'Austin Freeman',
-    ),
-    Quote(
-      quote: 'Code is like humor. When you have to explain it, it’s bad.',
-      author: 'Cory House',
+      q: 'Simplicity is the soul of efficiency.',
+      a: 'Austin Freeman',
     ),
   ];
 
   static int _fallbackIndex = 0;
 
-  Future<Quote> fetchRandomQuote() async {
+  Future<Quote> fetchQuotes() async {
     try {
       final response = await http
           .get(Uri.parse(apiUrl))
@@ -35,13 +30,14 @@ class QuoteService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return Quote.fromJson(data);
+        if (data is List && data.isNotEmpty) {
+          return Quote.fromJson(data[0]);
+        }
       }
     } catch (_) {
-      // Offline fallback ensuring app runs anywhere
+      // Fallback if offline
     }
 
-    // Return rotating fallback quote if network is offline
     final quote = _fallbackQuotes[_fallbackIndex % _fallbackQuotes.length];
     _fallbackIndex++;
     return quote;
