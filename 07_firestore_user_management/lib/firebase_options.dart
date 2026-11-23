@@ -19,19 +19,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDQhOnkePfdEsyKHgkPoRO6yhLu8W2XGps',
-    appId: '1:396348668850:web:39cb4c50381396560842ab',
-    messagingSenderId: '396348668850',
-    projectId: 'student-mgmt-92400133057',
-    authDomain: 'student-mgmt-92400133057.firebaseapp.com',
-    storageBucket: 'student-mgmt-92400133057.firebasestorage.app',
+    apiKey: 'AIzaSyC95FiNMs86RftMd4TbeCP5DijtVkUz6YE',
+    appId: '1:597178090434:web:f096fd36ada48149aecc5b',
+    messagingSenderId: '597178090434',
+    projectId: 'udemy-users-92400133057',
+    authDomain: 'udemy-users-92400133057.firebaseapp.com',
+    storageBucket: 'udemy-users-92400133057.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCmLR_1CbcpDaA8702Jyo7DPLPX5knCCqI',
-    appId: '1:396348668850:android:7b9e5196fb8e59e30842ab',
-    messagingSenderId: '396348668850',
-    projectId: 'student-mgmt-92400133057',
-    storageBucket: 'student-mgmt-92400133057.firebasestorage.app',
+    apiKey: 'AIzaSyCba7KjY-youu-BKy8AiTAdL0F5zTP8Ukk',
+    appId: '1:597178090434:android:1cd381c707527505aecc5b',
+    messagingSenderId: '597178090434',
+    projectId: 'udemy-users-92400133057',
+    storageBucket: 'udemy-users-92400133057.firebasestorage.app',
   );
 }

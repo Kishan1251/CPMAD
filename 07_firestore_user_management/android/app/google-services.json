@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "396348668850",
-    "project_id": "student-mgmt-92400133057",
-    "storage_bucket": "student-mgmt-92400133057.firebasestorage.app"
+    "project_number": "597178090434",
+    "project_id": "udemy-users-92400133057",
+    "storage_bucket": "udemy-users-92400133057.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:396348668850:android:7b9e5196fb8e59e30842ab",
+        "mobilesdk_app_id": "1:597178090434:android:1cd381c707527505aecc5b",
         "android_client_info": {
           "package_name": "com.example.student_management"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCmLR_1CbcpDaA8702Jyo7DPLPX5knCCqI"
+          "current_key": "AIzaSyCba7KjY-youu-BKy8AiTAdL0F5zTP8Ukk"
         }
       ],
       "services": {
