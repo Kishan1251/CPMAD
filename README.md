@@ -1,146 +1,53 @@
-# 📱 Flutter & Dart Masterclass: 11 Distinct Course Projects
+# 📱 Flutter Course Video Projects
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.47.1-blue.svg?logo=flutter)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.13.1-0175C2.svg?logo=dart)](https://dart.dev)
-[![Status: Complete](https://img.shields.io/badge/Projects-11%20Distinct%20Projects-brightgreen.svg)]()
+[![Video Sections](https://img.shields.io/badge/Projects-7%20Video%20Projects-brightgreen.svg)]()
 
-This repository contains **11 completely separate, standalone Flutter projects** covering all topics and practical exercises taught across the entire **Udemy Flutter & Dart Course** (Sections 1 through 20). 
-
-Each project folder is completely independent with its own `pubspec.yaml`, `lib/main.dart`, and platform runners. You can open, build, and run any project individually!
+This repository contains **only the applications built and demonstrated in the video lectures** of the Udemy Flutter & Dart Course. Each video section project is structured as its own standalone, fully runnable Flutter application with its own `pubspec.yaml`, `lib/main.dart`, and platform runners.
 
 ---
 
-## 📂 Project Directory & How to Run Each Project
+## 📂 The 7 Video Section Projects & How to Run
 
-| Project Folder | Udemy Section | Project Title | How to Run |
-|---|---|---|---|
-| [`01_hello_world/`](01_hello_world/) | Section 3 | **Hello World App** | `cd 01_hello_world && flutter run -d chrome` |
-| [`02_widgets_and_layouts/`](02_widgets_and_layouts/) | Sections 4, 5, 6 | **Widgets & Layouts Showcase** | `cd 02_widgets_and_layouts && flutter run -d chrome` |
-| [`03_random_color_generator/`](03_random_color_generator/) | Section 8 | **Random Color Generator (Stateful Lifecycle)** | `cd 03_random_color_generator && flutter run -d chrome` |
-| [`04_navigation_and_auth/`](04_navigation_and_auth/) | Sections 9 & 10 | **Navigation & Data Passing (Splash, Login, Register, Dashboard)** | `cd 04_navigation_and_auth && flutter run -d chrome` |
-| [`05_named_routes/`](05_named_routes/) | Section 11 | **Named Routes Navigation** | `cd 05_named_routes && flutter run -d chrome` |
-| [`06_form_validation/`](06_form_validation/) | Sections 12 & 13 | **Form Input & Real-time Validation** | `cd 06_form_validation && flutter run -d chrome` |
-| [`07_getx_state_management/`](07_getx_state_management/) | Section 14 | **GetX State Management Suite (Counter, User, DI)** | `cd 07_getx_state_management && flutter run -d chrome` |
-| [`08_sqlite_notes_app/`](08_sqlite_notes_app/) | Sections 15 & 16 | **SQLite Local Database Notes App (MVC Architecture)** | `cd 08_sqlite_notes_app && flutter run -d chrome` |
-| [`09_quotes_app/`](09_quotes_app/) | Section 17 | **Quotes App (GetX + REST API + JSON Parsing)** | `cd 09_quotes_app && flutter run -d chrome` |
-| [`10_todo_api_crud/`](10_todo_api_crud/) | Section 18 | **Todo CRUD App (REST API without GetX)** | `cd 10_todo_api_crud && flutter run -d chrome` |
-| [`11_firebase_firestore_users/`](11_firebase_firestore_users/) | Sections 19 & 20 | **Firebase Cloud Firestore User Management CRUD** | `cd 11_firebase_firestore_users && flutter run -d chrome` |
+| # | Project Folder | Udemy Video Section | Video Topic & Description | How to Run |
+|:---:|---|---|---|---|
+| **01** | [`01_hello_world_app/`](01_hello_world_app/) | **Section 3 Video** | **Building Your First App: "Hello World"**<br>Scaffold, AppBar, Container (color red), Center, and styled Text. | `cd 01_hello_world_app && flutter run -d chrome` |
+| **02** | [`02_random_color_app/`](02_random_color_app/) | **Section 8 Video** | **Stateful Widget & Random Color Generator**<br>StatefulWidget lifecycle, dynamic RGB calculation (`Random().nextInt(256)`), luminance contrast formula for text/FAB, `setState()`. | `cd 02_random_color_app && flutter run -d chrome` |
+| **03** | [`03_navigation_auth_app/`](03_navigation_auth_app/) | **Sections 9, 10, 11 Videos** | **Navigation, Auth Flow & Named Routes**<br>3s Splash delay (`Future.delayed`), pushReplacement, Login with validation, Registration with automatic back button, Dashboard receiving username argument, centralized named routes (`onGenerateRoute`). | `cd 03_navigation_auth_app && flutter run -d chrome` |
+| **04** | [`04_sqlite_notes_app/`](04_sqlite_notes_app/) | **Section 16 Video** | **SQLite Notes App (Local Database MVC)**<br>Local SQLite storage: Note Model, Singleton `DatabaseHelper`, Controller, `FutureBuilder` NotesListScreen, Add/Edit Note Form. | `cd 04_sqlite_notes_app && flutter run -d chrome` |
+| **05** | [`05_quotes_app/`](05_quotes_app/) | **Section 17 Video** | **Quotes App (GetX + REST API + JSON Parsing)**<br>HTTP package integration, QuickType model parsing `q` (quote) and `a` (author), reactive `QuotesController` with `quotes.obs`, `Obx` reactive UI, refresh FAB. | `cd 05_quotes_app && flutter run -d chrome` |
+| **06** | [`06_todo_api_crud/`](06_todo_api_crud/) | **Section 18 Video** | **Todo CRUD App (REST API without GetX)**<br>Pure `StatefulWidget` & `setState()`, HTTP CRUD operations (GET, POST, PUT, DELETE), `Expanded` row with text field + add button, `CheckboxListTile` with leading checkbox, trailing delete. | `cd 06_todo_api_crud && flutter run -d chrome` |
+| **07** | [`07_firestore_user_management/`](07_firestore_user_management/) | **Section 20 Video** | **Cloud Firestore User Management CRUD**<br>Cloud Firestore real-time data storage, `StreamBuilder` listening to collection snapshots, dual-mode Form (Insert vs Update by `selectedId`), document deletion. | `cd 07_firestore_user_management && flutter run -d chrome` |
 
 ---
 
-## 🔍 Detailed Project Descriptions
+## 🚀 How to Run Any Video Project
 
-### 1. [`01_hello_world/`](01_hello_world/) — Section 3: First App: "Hello World"
-- **Key Concepts**: `MaterialApp`, `Scaffold`, `AppBar`, `Container` dimensions and colors, `Center`, and `TextStyle`.
-- **Run command**:
-  ```bash
-  cd 01_hello_world
-  flutter run -d chrome
-  ```
+1. Open your terminal and change directory to the video project you want to test:
+   ```bash
+   cd 01_hello_world_app
+   # or
+   cd 04_sqlite_notes_app
+   # or
+   cd 05_quotes_app
+   ```
 
-### 2. [`02_widgets_and_layouts/`](02_widgets_and_layouts/) — Sections 4, 5, 6: Widgets & Layouts
-- **Key Concepts**:
-  - Text styling, alignment, and overflow handling with ellipsis.
-  - Button types: `ElevatedButton`, `TextButton`, `OutlinedButton`.
-  - Network images with `loadingBuilder` and `errorBuilder`.
-  - Multi-child layouts: `Row` (`mainAxisAlignment.spaceEvenly`), `Column`, `ListView`.
-  - Flex space distribution: `Expanded(flex: 2)` and `Flexible`.
-  - Container styling: `BoxDecoration`, borders, box shadows, and 3D transformation with `Matrix4.rotationZ`.
-- **Run command**:
-  ```bash
-  cd 02_widgets_and_layouts
-  flutter run -d chrome
-  ```
+2. Run in **Google Chrome**:
+   ```bash
+   flutter run -d chrome
+   ```
 
-### 3. [`03_random_color_generator/`](03_random_color_generator/) — Section 8: Stateful Widget & Random Color
-- **Key Concepts**: Converting `StatelessWidget` to `StatefulWidget`, role of `setState()`, dynamic RGB calculation using `Random().nextInt(256)`, and mathematical relative luminance contrast calculation (`0.299R + 0.587G + 0.114B`) to ensure the text and FAB remain legible.
-- **Run command**:
-  ```bash
-  cd 03_random_color_generator
-  flutter run -d chrome
-  ```
-
-### 4. [`04_navigation_and_auth/`](04_navigation_and_auth/) — Sections 9 & 10: Navigation & Data Passing
-- **Key Concepts**:
-  - `SplashScreen`: 3-second delay timer with `Future.delayed` and `pushReplacement`.
-  - `LoginScreen`: `TextEditingController` handling and input validation.
-  - `RegistrationScreen`: Pushed onto navigation stack with automatic AppBar back button.
-  - `DashboardScreen`: Receives username as constructor argument and displays personalized greeting.
-- **Run command**:
-  ```bash
-  cd 04_navigation_and_auth
-  flutter run -d chrome
-  ```
-
-### 5. [`05_named_routes/`](05_named_routes/) — Section 11: Named Routes
-- **Key Concepts**: Centralized routing table (`initialRoute: '/'`, `routes: { ... }`), `onGenerateRoute` extracting `RouteSettings.arguments`, `pushNamed` and `pushReplacementNamed`.
-- **Run command**:
-  ```bash
-  cd 05_named_routes
-  flutter run -d chrome
-  ```
-
-### 6. [`06_form_validation/`](06_form_validation/) — Sections 12 & 13: Forms & Real-time Validation
-- **Key Concepts**: `Form` widget with `GlobalKey<FormState>()`, custom `FormValidator` class (Email regex, strong password rules, 10-digit phone regex), cross-field password matching, `DropdownButtonFormField`, `CheckboxListTile`, autovalidateMode, and form reset.
-- **Run command**:
-  ```bash
-  cd 06_form_validation
-  flutter run -d chrome
-  ```
-
-### 7. [`07_getx_state_management/`](07_getx_state_management/) — Section 14: GetX State Management
-- **Key Concepts**:
-  - Reactive Counter with `.obs` and granular `Obx()` rebuilds.
-  - Reactive User profile model with `user.update((val) { ... })`.
-  - Dependency Injection with `Get.put(ApiService())` and `Get.find<ApiService>()`.
-  - Context-less snackbars with `Get.snackbar()`.
-- **Run command**:
-  ```bash
-  cd 07_getx_state_management
-  flutter run -d chrome
-  ```
-
-### 8. [`08_sqlite_notes_app/`](08_sqlite_notes_app/) — Sections 15 & 16: SQLite Database (MVC)
-- **Key Concepts**: Full relational SQLite local database CRUD using the **MVC (Model-View-Controller)** pattern:
-  - `models/note_model.dart`: Entity with `toMap()` and `fromMap()`.
-  - `helpers/notes_db_helper.dart`: Singleton pattern with SQL table creation, insert, query, update, delete.
-  - `controllers/notes_controller.dart`: Controller intermediary.
-  - `views/notes_list_screen.dart` & `views/add_edit_note_screen.dart`: Asynchronous `FutureBuilder`, date formatting with `intl`, and dual Add/Edit modes.
-- **Run command**:
-  ```bash
-  cd 08_sqlite_notes_app
-  flutter run -d chrome
-  ```
-
-### 9. [`09_quotes_app/`](09_quotes_app/) — Section 17: Quotes App (GetX + REST API)
-- **Key Concepts**: Fetching remote data over HTTP, JSON deserialization with QuickType pattern, reactive state controller (`QuotesController`) with `quotes.obs` and `isLoading.obs`, and `Obx()` reactive widget rebuilds.
-- **Run command**:
-  ```bash
-  cd 09_quotes_app
-  flutter run -d chrome
-  ```
-
-### 10. [`10_todo_api_crud/`](10_todo_api_crud/) — Section 18: Todo CRUD without GetX
-- **Key Concepts**: Complete CRUD (Create, Read, Update, Delete) via HTTP REST API using standard Flutter `StatefulWidget` and `setState()`. Features `Expanded` row input, timestamp ID generation, and `CheckboxListTile` with leading checkbox.
-- **Run command**:
-  ```bash
-  cd 10_todo_api_crud
-  flutter run -d chrome
-  ```
-
-### 11. [`11_firebase_firestore_users/`](11_firebase_firestore_users/) — Sections 19 & 20: Cloud Firestore User CRUD
-- **Key Concepts**: Cloud Firestore real-time data storage, `StreamBuilder<QuerySnapshot>` listening to collection snapshots, dual-mode Form supporting user creation and in-place document updates via `selectedId`, and instant document deletion.
-- **Run command**:
-  ```bash
-  cd 11_firebase_firestore_users
-  flutter run -d chrome
-  ```
+3. Or run as a native **macOS desktop app**:
+   ```bash
+   flutter run -d macos
+   ```
 
 ---
 
 ## 🎓 Google Classroom Submission Guide
 
-### Step 1: Push Your Repository to GitHub (`manavkasundra/fllutter_project`)
+### Step 1: Push Repository to GitHub (`manavkasundra/fllutter_project`)
 The Git remote `origin` is already set to `https://github.com/manavkasundra/fllutter_project.git`.
 
 Run this in your terminal:
@@ -149,12 +56,12 @@ cd /Users/manavkasundra/fllutter_project
 git push -u origin main
 ```
 
-*(When prompted for your password, paste your GitHub Personal Access Token or authenticate via GitHub CLI `gh auth login` / SSH).*
+*(When prompted for password, enter your GitHub Personal Access Token or authenticate via GitHub CLI / SSH).*
 
 ### Step 2: Submit on Google Classroom
-1. Go to your assignment on [Google Classroom](https://classroom.google.com).
+1. Open your assignment in **Google Classroom**.
 2. Click **+ Add or create** > **Link**.
-3. Paste your public GitHub URL:
+3. Paste:
    ```text
    https://github.com/manavkasundra/fllutter_project
    ```
