@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'core/firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'firebase_options.dart';
 import 'models/user_model.dart';
 import 'services/firestore_user_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     const MaterialApp(
       home: UserManagementScreen(),
@@ -125,7 +131,8 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                   itemCount: docs.length,
                   itemBuilder: (context, index) {
                     final doc = docs[index];
-                    final user = UserModel.fromMap(doc.id, doc.data());
+                    final data = doc.data() as Map<String, dynamic>;
+                    final user = UserModel.fromMap(doc.id, data);
 
                     return ListTile(
                       title: Text(user.name),
