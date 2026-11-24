@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+
 import 'views/notes_list_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: NotesApp(),
-  ));
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Notes App',
+      home: NotesApp(),
+    ),
+  );
 }
-
 
 /// Udemy Course - Sections 15 & 16: SQLite Local Database Notes App
 class NotesApp extends StatelessWidget {

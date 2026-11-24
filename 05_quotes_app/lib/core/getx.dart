@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 /// Lightweight, self-contained implementation of GetX primitives
@@ -216,7 +217,9 @@ class Get {
   static T find<T>({String? tag}) {
     final dep = _dependencies[T];
     if (dep == null) {
-      throw Exception('Get: Instance of $T not found. Call Get.put($T()) first.');
+      throw Exception(
+        'Get: Instance of $T not found. Call Get.put($T()) first.',
+      );
     }
     return dep as T;
   }
@@ -265,7 +268,13 @@ class Get {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: TextStyle(fontWeight: FontWeight.bold, color: colorText ?? Colors.white)),
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: colorText ?? Colors.white,
+              ),
+            ),
             Text(message, style: TextStyle(color: colorText ?? Colors.white70)),
           ],
         ),

@@ -5,6 +5,6 @@
 ## How to Run
 
 ```bash
-cd 03_random_color_generator
+cd 02_random_color_app
 flutter run -d chrome
 ```

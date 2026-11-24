@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'firebase_options.dart';
 import 'models/user_model.dart';
 import 'services/firestore_user_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    const MaterialApp(
-      home: UserManagementScreen(),
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'User Management',
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+      ),
+      home: const UserManagementScreen(),
     ),
   );
 }
@@ -26,12 +32,14 @@ class UserManagementScreen extends StatefulWidget {
 
 class _UserManagementScreenState extends State<UserManagementScreen> {
   final FirestoreUserService _service = FirestoreUserService();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _salaryController = TextEditingController();
 
   String? _selectedId;
+  bool _isSaving = false;
 
   @override
   void dispose() {
@@ -45,22 +53,48 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
     _nameController.clear();
     _cityController.clear();
     _salaryController.clear();
-    setState(() => _selectedId = null);
+    setState(() {
+      _selectedId = null;
+      _isSaving = false;
+    });
   }
 
   void _handleSubmit() async {
+    if (!(_formKey.currentState?.validate() ?? false) || _isSaving) {
+      return;
+    }
+
     final name = _nameController.text.trim();
     final city = _cityController.text.trim();
-    final salary = int.tryParse(_salaryController.text.trim()) ?? 0;
+    final salary = int.parse(_salaryController.text.trim());
+    final isUpdate = _selectedId != null;
 
-    if (name.isNotEmpty && city.isNotEmpty && salary > 0) {
-      if (_selectedId != null) {
+    setState(() => _isSaving = true);
+    try {
+      if (isUpdate) {
         await _service.updateUser(_selectedId!, name, city, salary);
       } else {
         await _service.addUser(name, city, salary);
       }
+      if (!mounted) return;
       _clearInputs();
+      _showMessage(
+        isUpdate ? 'User updated successfully.' : 'User added successfully.',
+      );
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _isSaving = false);
+      _showMessage('Could not save user. Please try again.', isError: true);
     }
+  }
+
+  void _showMessage(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Theme.of(context).colorScheme.error : null,
+      ),
+    );
   }
 
   void _editUser(UserModel user) {
@@ -72,44 +106,140 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
     });
   }
 
-  void _deleteUser(String docId) async {
-    await _service.deleteUser(docId);
-    if (_selectedId == docId) {
-      _clearInputs();
+  Future<void> _deleteUser(String docId) async {
+    try {
+      await _service.deleteUser(docId);
+      if (!mounted) return;
+      if (_selectedId == docId) {
+        _clearInputs();
+      }
+      _showMessage('User deleted successfully.');
+    } catch (_) {
+      if (!mounted) return;
+      _showMessage('Could not delete user. Please try again.', isError: true);
+    }
+  }
+
+  Future<void> _confirmDelete(UserModel user) async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete user'),
+        content: Text('Delete ${user.name}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldDelete == true) {
+      await _deleteUser(user.id);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('User Management'),
-      ),
+      appBar: AppBar(title: const Text('User Management')),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              children: [
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
-                ),
-                TextField(
-                  controller: _cityController,
-                  decoration: const InputDecoration(labelText: 'City'),
-                ),
-                TextField(
-                  controller: _salaryController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Salary'),
-                ),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: _handleSubmit,
-                  child: Text(_selectedId != null ? 'Update' : 'Add'),
-                ),
-              ],
+            padding: const EdgeInsets.all(12),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: _nameController,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: const InputDecoration(
+                      labelText: 'Name',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Enter a name';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _cityController,
+                    textInputAction: TextInputAction.next,
+                    textCapitalization: TextCapitalization.words,
+                    decoration: const InputDecoration(
+                      labelText: 'City',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Enter a city';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: _salaryController,
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.done,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    decoration: const InputDecoration(
+                      labelText: 'Salary',
+                      border: OutlineInputBorder(),
+                      prefixText: '\$ ',
+                    ),
+                    validator: (value) {
+                      final salary = int.tryParse(value?.trim() ?? '');
+                      if (salary == null || salary <= 0) {
+                        return 'Enter a salary greater than 0';
+                      }
+                      return null;
+                    },
+                    onFieldSubmitted: (_) => _handleSubmit(),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FilledButton.icon(
+                          onPressed: _isSaving ? null : _handleSubmit,
+                          icon: _isSaving
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Icon(
+                                  _selectedId != null ? Icons.save : Icons.add,
+                                ),
+                          label: Text(
+                            _selectedId != null ? 'Update User' : 'Add User',
+                          ),
+                        ),
+                      ),
+                      if (_selectedId != null) ...[
+                        const SizedBox(width: 8),
+                        OutlinedButton(
+                          onPressed: _isSaving ? null : _clearInputs,
+                          child: const Text('Cancel'),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           const Divider(),
@@ -119,6 +249,14 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text(
+                      'Could not load users. Check your connection and try again.',
+                    ),
+                  );
                 }
 
                 final docs = snapshot.data?.docs ?? [];
@@ -145,8 +283,9 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                             onPressed: () => _editUser(user),
                           ),
                           IconButton(
+                            tooltip: 'Delete',
                             icon: const Icon(Icons.delete),
-                            onPressed: () => _deleteUser(user.id),
+                            onPressed: () => _confirmDelete(user),
                           ),
                         ],
                       ),

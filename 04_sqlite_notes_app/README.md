@@ -5,6 +5,6 @@
 ## How to Run
 
 ```bash
-cd 08_sqlite_notes_app
+cd 04_sqlite_notes_app
 flutter run -d chrome
 ```

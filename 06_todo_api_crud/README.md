@@ -5,6 +5,6 @@
 ## How to Run
 
 ```bash
-cd 10_todo_api_crud
+cd 06_todo_api_crud
 flutter run -d chrome
 ```

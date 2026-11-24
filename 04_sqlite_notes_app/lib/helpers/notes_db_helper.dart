@@ -1,6 +1,8 @@
 import 'dart:async';
+
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+
 import '../core/database.dart';
 import '../models/note_model.dart';
 
@@ -37,11 +39,7 @@ class DatabaseHelper {
       path = '/tmp/notes.db';
     }
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDb,
-    );
+    return await openDatabase(path, version: 1, onCreate: _createDb);
   }
 
   void _createDb(Database db, int newVersion) async {
@@ -80,10 +78,6 @@ class DatabaseHelper {
   // Delete a note
   Future<int> deleteNote(int id) async {
     final db = await database;
-    return await db.delete(
-      tableName,
-      where: '$colId = ?',
-      whereArgs: [id],
-    );
+    return await db.delete(tableName, where: '$colId = ?', whereArgs: [id]);
   }
 }

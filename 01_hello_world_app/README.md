@@ -5,6 +5,6 @@
 ## How to Run
 
 ```bash
-cd 01_hello_world
+cd 01_hello_world_app
 flutter run -d chrome
 ```

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreUserService {
-  final CollectionReference _usersCollection =
-      FirebaseFirestore.instance.collection('users');
+  final CollectionReference _usersCollection = FirebaseFirestore.instance
+      .collection('users');
 
   Stream<QuerySnapshot> getUsersStream() {
     return _usersCollection.snapshots();
@@ -17,7 +17,12 @@ class FirestoreUserService {
     });
   }
 
-  Future<void> updateUser(String docId, String name, String city, int salary) async {
+  Future<void> updateUser(
+    String docId,
+    String name,
+    String city,
+    int salary,
+  ) async {
     await _usersCollection.doc(docId).update({
       'name': name,
       'city': city,

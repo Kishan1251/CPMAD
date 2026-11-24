@@ -1,9 +1,12 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(
     const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Random Color',
       home: RandomColorPage(),
     ),
   );
@@ -56,28 +59,20 @@ class _RandomColorPageState extends State<RandomColorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Random Color Page'),
-      ),
+      appBar: AppBar(title: const Text('Random Color Page')),
       body: Container(
         color: _containerColor,
         child: Center(
           child: Text(
             'Random Color',
-            style: TextStyle(
-              color: _textColor,
-              fontSize: 24,
-            ),
+            style: TextStyle(color: _textColor, fontSize: 24),
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: _fabColor,
         onPressed: _changeColor,
-        child: Icon(
-          Icons.refresh,
-          color: _textColor,
-        ),
+        child: Icon(Icons.refresh, color: _textColor),
       ),
     );
   }

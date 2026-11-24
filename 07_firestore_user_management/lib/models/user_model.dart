@@ -24,8 +24,8 @@ class UserModel {
   }
 
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'city': city,
-        'salary': salary,
-      };
+    'name': name,
+    'city': city,
+    'salary': salary,
+  };
 }

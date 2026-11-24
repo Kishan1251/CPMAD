@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/note_model.dart';
 import '../controllers/notes_controller.dart';
 import 'add_edit_note_screen.dart';
@@ -29,9 +30,7 @@ class _NotesListScreenState extends State<NotesListScreen> {
   void _navigateToEdit(Note? note) async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => AddEditNoteScreen(note: note),
-      ),
+      MaterialPageRoute(builder: (_) => AddEditNoteScreen(note: note)),
     );
     if (result == true) {
       _loadNotes();
@@ -39,16 +38,22 @@ class _NotesListScreenState extends State<NotesListScreen> {
   }
 
   void _deleteNote(int id) async {
-    await _noteController.deleteNote(id);
-    _loadNotes();
+    try {
+      await _noteController.deleteNote(id);
+      _loadNotes();
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not delete the note')),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notes App'),
-      ),
+      appBar: AppBar(title: const Text('Notes App')),
       body: FutureBuilder<List<Note>>(
         future: _notesFuture,
         builder: (context, snapshot) {
@@ -56,14 +61,17 @@ class _NotesListScreenState extends State<NotesListScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text('Could not load notes. Please try again.'),
+            );
+          }
+
           final notes = snapshot.data ?? [];
 
           if (notes.isEmpty) {
             return const Center(
-              child: Text(
-                'No notes found',
-                style: TextStyle(fontSize: 18),
-              ),
+              child: Text('No notes found', style: TextStyle(fontSize: 18)),
             );
           }
 

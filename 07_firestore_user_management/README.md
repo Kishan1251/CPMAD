@@ -5,6 +5,6 @@
 ## How to Run
 
 ```bash
-cd 11_firebase_firestore_users
+cd 07_firestore_user_management
 flutter run -d chrome
 ```

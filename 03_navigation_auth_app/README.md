@@ -5,6 +5,6 @@
 ## How to Run
 
 ```bash
-cd 05_named_routes
+cd 03_navigation_auth_app
 flutter run -d chrome
 ```

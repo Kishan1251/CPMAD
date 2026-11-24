@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import '../models/todo_model.dart';
 
 /// TodoApiService implementing GET, POST, PUT, DELETE (Section 18)
@@ -9,9 +11,21 @@ class TodoApiService {
   // In-memory cache for instant feedback and offline responsiveness
   static final List<Todo> _localCache = [
     Todo(id: 1, title: 'Learn Dart fundamental OOP concepts', completed: true),
-    Todo(id: 2, title: 'Build Flutter Stateful & Stateless widgets', completed: true),
-    Todo(id: 3, title: 'Master SQLite Database with MVC pattern', completed: false),
-    Todo(id: 4, title: 'Integrate Cloud Firestore real-time streams', completed: false),
+    Todo(
+      id: 2,
+      title: 'Build Flutter Stateful & Stateless widgets',
+      completed: true,
+    ),
+    Todo(
+      id: 3,
+      title: 'Master SQLite Database with MVC pattern',
+      completed: false,
+    ),
+    Todo(
+      id: 4,
+      title: 'Integrate Cloud Firestore real-time streams',
+      completed: false,
+    ),
   ];
 
   Future<List<Todo>> getTodos() async {
@@ -27,9 +41,11 @@ class TodoApiService {
           _localCache.clear();
           _localCache.addAll(remote);
         }
+      } else {
+        throw Exception('Unable to load todos (${response.statusCode})');
       }
     } catch (_) {
-      // Use local storage when offline
+      // Keep the local cache available when the API is unreachable.
     }
     return List.from(_localCache);
   }
@@ -39,15 +55,24 @@ class TodoApiService {
     final newTodo = Todo(id: newId, title: title, completed: false);
 
     try {
-      await http
+      final response = await http
           .post(
             Uri.parse(baseUrl),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode(newTodo.toJson()),
           )
           .timeout(const Duration(seconds: 4));
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final created = Todo.fromJson(jsonDecode(response.body));
+        if (created.title.isNotEmpty) {
+          newTodo.title = created.title;
+        }
+      } else {
+        throw Exception('Unable to create todo (${response.statusCode})');
+      }
     } catch (_) {
-      // Continue offline
+      // Add locally when the API is unreachable.
     }
 
     _localCache.insert(0, newTodo);

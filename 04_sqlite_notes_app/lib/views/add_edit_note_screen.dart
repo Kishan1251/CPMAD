@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/note_model.dart';
 import '../controllers/notes_controller.dart';
 
@@ -22,7 +23,9 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.note?.title ?? '');
-    _contentController = TextEditingController(text: widget.note?.content ?? '');
+    _contentController = TextEditingController(
+      text: widget.note?.content ?? '',
+    );
   }
 
   @override
@@ -36,7 +39,14 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     final title = _titleController.text.trim();
     final content = _contentController.text.trim();
 
-    if (title.isNotEmpty) {
+    if (title.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a note title')),
+      );
+      return;
+    }
+
+    try {
       if (_isEditMode) {
         final updatedNote = Note(
           id: widget.note!.id,
@@ -56,15 +66,19 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
       if (mounted) {
         Navigator.pop(context, true);
       }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not save the note')),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_isEditMode ? 'Edit Note' : 'Add Note'),
-      ),
+      appBar: AppBar(title: Text(_isEditMode ? 'Edit Note' : 'Add Note')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -79,10 +93,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
               decoration: const InputDecoration(labelText: 'Content'),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _saveNote,
-              child: const Text('Save'),
-            ),
+            ElevatedButton(onPressed: _saveNote, child: const Text('Save')),
           ],
         ),
       ),

@@ -24,11 +24,7 @@ abstract class Database {
     String? where,
     List<Object?>? whereArgs,
   });
-  Future<int> delete(
-    String table, {
-    String? where,
-    List<Object?>? whereArgs,
-  });
+  Future<int> delete(String table, {String? where, List<Object?>? whereArgs});
   Future<void> close();
 }
 
@@ -51,7 +47,9 @@ class LocalPersistentDatabase implements Database {
           final decoded = jsonDecode(content) as Map<String, dynamic>;
           _tables.clear();
           decoded.forEach((key, val) {
-            final rows = (val as List).map((r) => Map<String, dynamic>.from(r as Map)).toList();
+            final rows = (val as List)
+                .map((r) => Map<String, dynamic>.from(r as Map))
+                .toList();
             _tables[key] = rows;
             for (final row in rows) {
               if (row['id'] is int && (row['id'] as int) >= _autoIncrementId) {
@@ -82,7 +80,10 @@ class LocalPersistentDatabase implements Database {
   @override
   Future<void> execute(String sql, [List<Object?>? arguments]) async {
     // Parse table name if CREATE TABLE
-    final createMatch = RegExp(r'CREATE\s+TABLE\s+(\w+)', caseSensitive: false).firstMatch(sql);
+    final createMatch = RegExp(
+      r'CREATE\s+TABLE\s+(\w+)',
+      caseSensitive: false,
+    ).firstMatch(sql);
     if (createMatch != null) {
       final tableName = createMatch.group(1)!;
       _tables.putIfAbsent(tableName, () => []);
@@ -118,22 +119,33 @@ class LocalPersistentDatabase implements Database {
     int? offset,
   }) async {
     final rows = _tables[table] ?? [];
-    List<Map<String, dynamic>> result = rows.map((r) => Map<String, dynamic>.from(r)).toList();
+    List<Map<String, dynamic>> result = rows
+        .map((r) => Map<String, dynamic>.from(r))
+        .toList();
 
     if (where != null && whereArgs != null && whereArgs.isNotEmpty) {
       // Simple where clause filter e.g. "id = ?"
       if (where.contains('id = ?')) {
         final targetId = whereArgs.first;
-        result = result.where((r) => r['id'].toString() == targetId.toString()).toList();
+        result = result
+            .where((r) => r['id'].toString() == targetId.toString())
+            .toList();
       }
     }
 
     if (orderBy != null) {
       // Simple sort by date or id
       if (orderBy.contains('date')) {
-        result.sort((a, b) => (b['date'] ?? '').toString().compareTo((a['date'] ?? '').toString()));
+        result.sort(
+          (a, b) => (b['date'] ?? '').toString().compareTo(
+            (a['date'] ?? '').toString(),
+          ),
+        );
       } else {
-        result.sort((a, b) => (a['id'] ?? 0).toString().compareTo((b['id'] ?? 0).toString()));
+        result.sort(
+          (a, b) =>
+              (a['id'] ?? 0).toString().compareTo((b['id'] ?? 0).toString()),
+        );
       }
     }
 
@@ -149,7 +161,9 @@ class LocalPersistentDatabase implements Database {
   }) async {
     final rows = _tables[table] ?? [];
     int count = 0;
-    final targetId = whereArgs?.isNotEmpty == true ? whereArgs!.first : values['id'];
+    final targetId = whereArgs?.isNotEmpty == true
+        ? whereArgs!.first
+        : values['id'];
 
     for (int i = 0; i < rows.length; i++) {
       if (rows[i]['id'].toString() == targetId.toString()) {
@@ -190,7 +204,8 @@ Future<Database> openDatabase(
   String path, {
   int? version,
   FutureOr<void> Function(Database db, int version)? onCreate,
-  FutureOr<void> Function(Database db, int oldVersion, int newVersion)? onUpgrade,
+  FutureOr<void> Function(Database db, int oldVersion, int newVersion)?
+  onUpgrade,
 }) async {
   final db = LocalPersistentDatabase(path);
   await db._load();
